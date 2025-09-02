@@ -69,8 +69,6 @@ start-and-setup:
 	@echo "Running refresh-games and create-user..."
 	@$(MAKE) refresh-games
 	@$(MAKE) create-user
-	@echo "Setup complete! Services are running in background."
-	@echo "To stop services, run: make stop-services"
 
 stop-services:
 	@echo "Stopping all services..."
@@ -95,5 +93,5 @@ install:
 	@echo "Installing dependencies..."
 	@yarn install > /dev/null 2>&1
 
-prepare: prisma-generate env docker-up wait-for-database migrate install start-and-setup stop-services
+prepare: install prisma-generate env docker-up wait-for-database migrate start-and-setup stop-services
 
