@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { GamesService } from './games.service';
 import { GamesListDto } from 'apps/api-gateway/src/games/dto/games-list.dto';
 import { firstValueFrom } from 'rxjs';
@@ -16,5 +16,12 @@ export class GamesController {
   @Get('refresh')
   refresh(): Promise<SuccessResponse> {
     return firstValueFrom(this.gamesService.refresh());
+  }
+
+  @Get('generate-results/:gameId')
+  generateResults(
+    @Param() params: { gameId: string },
+  ): Promise<SuccessResponse> {
+    return firstValueFrom(this.gamesService.generateResults(params.gameId));
   }
 }

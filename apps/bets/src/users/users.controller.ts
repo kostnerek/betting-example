@@ -1,6 +1,5 @@
 import {
   SuccessResponse,
-  TEST_USER,
   User,
   UserAuthRequest,
   UserIdentityRequest,

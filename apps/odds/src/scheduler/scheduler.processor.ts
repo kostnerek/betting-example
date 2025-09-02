@@ -4,14 +4,6 @@ import { Job } from 'bullmq';
 @Processor('process-games')
 export class SchedulerProcessor extends WorkerHost {
   async process(job: Job<{ gameId: string }, any, string>) {
-    console.log('Processing scheduled job:', {
-      jobId: job.id,
-      jobName: job.name,
-      jobData: job.data,
-      processedAt: new Date().toISOString(),
-    });
-
-    // Your scheduled job logic goes here
     await this.processScheduledJob(job.data);
 
     return true;
@@ -25,6 +17,6 @@ export class SchedulerProcessor extends WorkerHost {
       }, 1000);
     });
     console.log('Processing game with ID:', jobData.gameId);
-    // Add your actual job processing logic here
+    // TODO: Add your actual job processing logic here
   }
 }

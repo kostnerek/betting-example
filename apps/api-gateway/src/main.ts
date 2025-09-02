@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { EnvironmentVariables } from 'apps/api-gateway/src/config/env.variables';
 import { ServerConfig } from 'apps/api-gateway/src/config/server.config';
 import { Logger, ValidationPipe } from '@nestjs/common';
-import { GrpcExceptionFilter } from '@app/common';
+import { GrpcExceptionFilter, NotFoundExceptionFilter } from '@app/common';
 
 async function bootstrap() {
   const config = new ConfigService<EnvironmentVariables>();
@@ -13,6 +13,7 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api');
   app.useGlobalFilters(new GrpcExceptionFilter());
+  app.useGlobalFilters(new NotFoundExceptionFilter());
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,

@@ -5,7 +5,6 @@ import {
   BetServiceControllerMethods,
   BetsProcessByGameIdRequest,
   SuccessResponse,
-  TEST_USER,
 } from '@app/common';
 import { Controller } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';

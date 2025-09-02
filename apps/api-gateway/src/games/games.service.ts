@@ -34,4 +34,9 @@ export class GamesService {
     const metadata = new Metadata();
     return this.gamesGrpcService.gameRefresh({}, metadata);
   }
+
+  generateResults(id: string) {
+    const metadata = new Metadata();
+    return this.gamesGrpcService.gameRunNow({ id }, metadata);
+  }
 }

@@ -84,17 +84,22 @@ export class BetsService {
     await this.validate(user, game, request.amount);
 
     /*
-      Below error is happening due to lack of serialization
-      even though typescript proto types are suggesting that it should be string value from enum
+      Below function exists because of gRPC enum issue
+      even though typescript proto types are suggesting that it should be string value from request
       gRPC enums are always in int format - so there is this workaround
 
       I didn't find flag in ts_proto to disable this behavior
     */
+    const mapGrpcToEnum = (team: any) => {
+      const teamCasted = team as number;
+      return teamCasted === 1 ? BetTeam.HOME : BetTeam.AWAY;
+    };
+
     const bet = await this.dao.createBet(
       {
         gameId: request.gameId,
         amount: request.amount,
-        team: request.team === 1 ? BetTeam.HOME : BetTeam.AWAY,
+        team: mapGrpcToEnum(request.team),
       },
       user.id,
     );

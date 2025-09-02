@@ -14,7 +14,6 @@ export class GamesSerializer {
 
     const where: Prisma.GameWhereInput = {};
 
-    // Filter by team name if provided
     if (args.teamName) {
       where.OR = [
         {
@@ -32,7 +31,6 @@ export class GamesSerializer {
       ];
     }
 
-    // Filter by commence time if provided
     if (args.commenceTime) {
       const commenceTime = new Date(args.commenceTime);
       where.commenceTime = {
@@ -62,13 +60,18 @@ export class GamesSerializer {
     };
 
     const selectedMarket = game.bookmakers[0].markets[0];
+    const now = new Date();
 
     return {
-      ...game,
+      id: game.id,
       homeTeam: game.home_team,
       awayTeam: game.away_team,
       commenceTime: new Date(game.commence_time),
       winner: null,
+      homeTeamScore: null,
+      awayTeamScore: null,
+      createdAt: now,
+      updatedAt: now,
       odds: [
         {
           team: determineTeam(selectedMarket.outcomes[0].name),
