@@ -2,22 +2,23 @@ import { NestFactory } from '@nestjs/core';
 
 import { Transport } from '@nestjs/microservices/enums/transport.enum';
 import { MicroserviceOptions } from '@nestjs/microservices';
-import { Logger } from '@nestjs/common';
 import { join } from 'path';
 import { ConfigService } from '@nestjs/config';
 import { EnvironmentVariables } from 'apps/bets/src/config/env.variables';
 import { ServerConfig } from 'apps/bets/src/config/server.config';
 import { AppModule } from 'apps/bets/src/app.module';
 import { ReflectionService } from '@grpc/reflection';
-import { protoPackageName } from '@app/common';
+import { protoPackageName, CustomLoggerService } from '@app/common';
 
 async function bootstrap() {
   const config = new ConfigService<EnvironmentVariables>();
   const serverConfig = new ServerConfig(config);
+  const logger = new CustomLoggerService('bets');
 
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     AppModule,
     {
+      logger,
       transport: Transport.GRPC,
       options: {
         url: `${serverConfig.getHost()}:${serverConfig.getPort()}`,
@@ -36,12 +37,12 @@ async function bootstrap() {
     },
   );
 
-  Logger.log(
+  logger.log(
     `Bets service is running on: ${serverConfig.getHost()}:${serverConfig.getPort()}`,
     'Bootstrap',
   );
   await app.listen();
 }
 bootstrap().catch((err) =>
-  Logger.error('Failed to bootstrap Bets service', err, 'Bootstrap'),
+  new CustomLoggerService('bets').error('Failed to bootstrap Bets service', err, 'Bootstrap'),
 );

@@ -1,4 +1,4 @@
-import { protoPackageName } from '@app/common';
+import { protoPackageName, LoggerModule } from '@app/common';
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { BetsModule } from 'apps/api-gateway/src/bets/bets.module';
@@ -13,6 +13,7 @@ const commonModules = [BetsModule, GamesModule, UsersModule];
   imports: [
     ...commonModules,
     AppConfigModule,
+    LoggerModule.forRoot('api-gateway'),
     ClientsModule.registerAsync({
       isGlobal: true,
       clients: [

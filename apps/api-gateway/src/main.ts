@@ -3,13 +3,14 @@ import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { EnvironmentVariables } from 'apps/api-gateway/src/config/env.variables';
 import { ServerConfig } from 'apps/api-gateway/src/config/server.config';
-import { Logger, ValidationPipe } from '@nestjs/common';
-import { GrpcExceptionFilter, NotFoundExceptionFilter } from '@app/common';
+import { ValidationPipe } from '@nestjs/common';
+import { GrpcExceptionFilter, NotFoundExceptionFilter, CustomLoggerService } from '@app/common';
 
 async function bootstrap() {
   const config = new ConfigService<EnvironmentVariables>();
   const serverConfig = new ServerConfig(config);
-  const app = await NestFactory.create(AppModule);
+  const logger = new CustomLoggerService('api-gateway');
+  const app = await NestFactory.create(AppModule, { logger });
 
   app.setGlobalPrefix('api');
   app.useGlobalFilters(new GrpcExceptionFilter());
@@ -24,11 +25,11 @@ async function bootstrap() {
   );
 
   await app.listen(serverConfig.getPort());
-  Logger.log(
+  logger.log(
     `Application is running on: localhost:${serverConfig.getPort()}`,
     'Bootstrap',
   );
 }
 bootstrap().catch((err) =>
-  Logger.error('Failed to bootstrap', err, 'Bootstrap'),
+  new CustomLoggerService('api-gateway').error('Failed to bootstrap', err, 'Bootstrap'),
 );

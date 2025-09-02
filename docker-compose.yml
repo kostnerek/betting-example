@@ -9,6 +9,8 @@ services:
     ports:
       - "${POSTGRES_ODDS_PORT:-5432}:5432"
     restart: always
+    volumes: 
+      - './scripts/wait-for-postgres.sh:/wait-for-postgres.sh'
 
   postgres_bets:
     image: postgres:17.6-alpine3.22
@@ -20,6 +22,8 @@ services:
     ports:
       - "${POSTGRES_BETS_PORT:-5433}:5432"
     restart: always
+    volumes: 
+      - './scripts/wait-for-postgres.sh:/wait-for-postgres.sh'
 
   redis_bullmq:
     image: redis:7-alpine
