@@ -17,7 +17,6 @@ export class UsersService {
   ) {}
 
   async userMe(username: string): Promise<GrpcUser> {
-    console.log(username);
     const user = await this.dao.findUserByUsername(username);
     if (!user) {
       throw GrpcErrors.notFound('User');
