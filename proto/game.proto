@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+package betting.example;
+
+import "common.proto";
+
+service GameService {
+  rpc GameListQuery (GameListRequest) returns (GameListResponse);
+  rpc GameListByIds (GameListByIdsRequest) returns (GameListByIdsResponse);
+  rpc GameById (GameByIdRequest) returns (Game);
+  rpc GameRefresh (Empty) returns (SuccessResponse);
+  rpc GameRunNow (GameRunNowRequest) returns (SuccessResponse);
+}
+
+message GameRunNowRequest {
+  string id = 1;
+}
+
+message GameListRequest {
+  PaginationDto pagination = 1;
+  optional string teamName = 2;
+  optional string commenceTime = 3;
+}
+
+
+message GameListResponse {
+  repeated Game games = 1;
+  PaginationMetadata pagination = 2;
+}
+
+message GameByIdRequest {
+  string id = 1;
+}
+
+message GameListByIdsRequest {
+  repeated string ids = 1;
+}
+
+message GameListByIdsResponse {
+  repeated Game games = 1;
+}
+
+
+message Odd {
+    BetTeam team = 1;
+    float odds = 2;
+}
+
+message Game {
+    string id = 1;
+    string homeTeam = 2;
+    string awayTeam = 3;
+    repeated Odd odds = 4;
+    string commenceTime = 5;
+    optional BetTeam winner = 6;
+    optional int32 homeTeamScore = 7;
+    optional int32 awayTeamScore = 8;
+}

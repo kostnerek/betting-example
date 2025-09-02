@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package betting.example;
+
+message PaginationDto {
+  int32 page = 1;
+  int32 pageSize = 2;
+}
+
+message PaginationMetadata {
+  int32 currentPage = 1;
+  int32 totalPages = 2;
+  int32 pageSize = 3;
+  int32 totalItems = 4;
+}
+
+message SuccessResponse {
+  string message = 1;
+}
+
+message ErrorResponse {
+  string message = 1;
+  int32 code = 2;
+}
+
+enum BetTeam {
+  HOME = 0;
+  AWAY = 1;
+}
+
+message Empty {}

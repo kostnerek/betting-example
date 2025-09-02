@@ -1,0 +1,37 @@
+
+generator clientBets {
+  provider = "prisma-client-js"
+  output   = "../../generated/prisma/bets"
+}
+
+datasource dbBets {
+  provider = "postgresql"
+  url      = env("DATABASE_URI_BETS")
+}
+
+model Bet {
+  id     String   @id @default(uuid())
+  amount Float
+  userId String
+  gameId String
+  team   BetTeam
+  won    Boolean?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, gameId])
+}
+
+model User {
+  id     String   @id @default(uuid())
+  balance Float @default(100) // for testing purposes
+  bets Bet[]
+  username String
+
+  @@unique([username]) 
+}
+
+enum BetTeam {
+    HOME
+    AWAY
+}

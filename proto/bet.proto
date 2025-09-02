@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package betting.example;
+
+import "common.proto";
+import "game.proto";
+
+service BetService {
+    rpc BetPlace (BetPlaceRequest) returns (Bet);
+    rpc BetsProcessByGameId (BetsProcessByGameIdRequest) returns (SuccessResponse);
+}
+
+message BetPlaceRequest {
+    string gameId = 1;
+    float amount = 2;
+    BetTeam team = 3;
+    string username = 4;
+}
+
+message BetsProcessByGameIdRequest {
+    string gameId = 1;
+    BetTeam winner = 2;
+}
+
+message Bet {
+    string id = 1;
+    string userId = 2;
+    string gameId = 3;
+    float amount = 4;
+    BetTeam team = 5;
+    Game game = 6;
+    optional bool won = 7;
+}

@@ -1,0 +1,36 @@
+services:
+  postgres_odds:
+    image: postgres:14-alpine
+    container_name: postgres_odds
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER_ODDS:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD_ODDS:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB_ODDS:-odds}
+    ports:
+      - "${POSTGRES_ODDS_PORT:-5432}:5432"
+    restart: always
+
+  postgres_bets:
+    image: postgres:14-alpine
+    container_name: postgres_bets
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER_BETS:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD_BETS:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB_BETS:-bets}
+    ports:
+      - "${POSTGRES_BETS_PORT:-5433}:5432"
+    restart: always
+
+  redis_bullmq:
+    image: redis:7-alpine
+    container_name: redis_bullmq
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    restart: always
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+
+volumes:
+  redis_data:
+    

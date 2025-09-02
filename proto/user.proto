@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package betting.example;
+
+import "common.proto";
+import "bet.proto";
+
+service UserService {
+    // rpc UserLogin (UserAuthRequest) returns (TokenResponse);
+    rpc UserRegister (UserAuthRequest) returns (SuccessResponse);
+    // rpc ValidateToken (TokenRequest) returns (ValidateTokenResponse);
+    rpc UserMe (UserIdentityRequest) returns (User);
+}
+
+message User {
+    string id = 1;
+    float balance = 2;
+    string username = 3;
+    repeated Bet bets = 4;
+}
+
+// message ValidateTokenResponse {
+//     bool valid = 1;
+// }
+
+message UserIdentityRequest {
+    string username = 1;
+}
+
+message UserAuthRequest {
+    string username = 1;
+}
+
+// message TokenRequest {
+//     string token = 1;
+// }
+
+message TokenResponse {
+    string token = 1;
+}

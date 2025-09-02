@@ -1,0 +1,39 @@
+
+generator clientOdds {
+  provider = "prisma-client-js"
+  output   = "../../generated/prisma/odds"
+}
+
+datasource dbOdds {
+  provider = "postgresql"
+  url      = env("DATABASE_URI_ODDS")
+}
+
+model Game {
+  id            String   @id
+  homeTeam      String
+  awayTeam      String
+  commenceTime  DateTime
+  winner        BetTeam?
+  homeTeamScore Int?
+  awayTeamScore Int?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  odds Odd[]
+}
+
+model Odd {
+  id     String   @id @default(uuid())
+  team   BetTeam
+  odds  Float
+  game   Game   @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  gameId String
+
+  @@unique([gameId, team])
+}
+
+enum BetTeam {
+    HOME
+    AWAY
+}
