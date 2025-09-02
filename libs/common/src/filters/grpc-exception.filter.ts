@@ -13,9 +13,9 @@ interface GrpcError {
   details?: string;
 }
 
-@Catch(RpcException, Error)
+@Catch()
 export class GrpcExceptionFilter implements ExceptionFilter {
-  catch(exception: RpcException | Error, host: ArgumentsHost) {
+  catch(exception: any, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
 
@@ -23,20 +23,16 @@ export class GrpcExceptionFilter implements ExceptionFilter {
     let message: string;
 
     if (exception instanceof RpcException) {
-      // Handle RpcException
       const error = exception.getError();
       grpcCode = this.extractGrpcCode(error);
       message = this.extractMessage(error);
-    } else if (this.isGrpcError(exception)) {
-      // Handle raw gRPC errors from @grpc/grpc-js
-      grpcCode = this.extractGrpcCodeFromError(exception);
-      message = this.extractMessageFromError(exception);
+    } else if (this.isGrpcError(exception as Error)) {
+      grpcCode = this.extractGrpcCodeFromError(exception as Error);
+      message = this.extractMessageFromError(exception as Error);
     } else {
-      // Not a gRPC error, re-throw to let other filters handle it
       throw exception;
     }
 
-    // Map gRPC status codes to HTTP status codes
     const httpStatus = this.grpcToHttpStatus(grpcCode);
 
     response.status(httpStatus).json({
@@ -89,7 +85,6 @@ export class GrpcExceptionFilter implements ExceptionFilter {
   }
 
   private isGrpcError(error: Error): boolean {
-    // Check if this is a gRPC error from @grpc/grpc-js
     return (
       'code' in error &&
       typeof error.code === 'number' &&
@@ -99,7 +94,6 @@ export class GrpcExceptionFilter implements ExceptionFilter {
   }
 
   private extractGrpcCodeFromError(error: Error): number {
-    // Handle raw gRPC errors from @grpc/grpc-js
     if ('code' in error && typeof error.code === 'number') {
       return error.code;
     }
@@ -107,7 +101,6 @@ export class GrpcExceptionFilter implements ExceptionFilter {
   }
 
   private extractMessageFromError(error: Error): string {
-    // Handle raw gRPC errors from @grpc/grpc-js
     if ('details' in error && typeof error.details === 'string') {
       return error.details;
     }

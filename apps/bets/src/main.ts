@@ -30,9 +30,6 @@ async function bootstrap() {
         loader: {
           includeDirs: [join(__dirname, '../')],
         },
-        onLoadPackageDefinition: (pkg, server) => {
-          new ReflectionService(pkg).addToServer(server);
-        },
       },
     },
   );
@@ -44,5 +41,9 @@ async function bootstrap() {
   await app.listen();
 }
 bootstrap().catch((err) =>
-  new CustomLoggerService('bets').error('Failed to bootstrap Bets service', err, 'Bootstrap'),
+  new CustomLoggerService('bets').error(
+    'Failed to bootstrap Bets service',
+    err,
+    'Bootstrap',
+  ),
 );

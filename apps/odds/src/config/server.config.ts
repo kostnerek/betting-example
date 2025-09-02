@@ -8,7 +8,7 @@ export class ServerConfig {
   constructor(private readonly config: ConfigService<EnvironmentVariables>) {}
 
   getPort(): number {
-    return this.config.get<number>('ODDS_MS_PORT') ?? 6001;
+    return this.config.get<number>('ODDS_MS_PORT') ?? 6000;
   }
 
   getHost(): string {

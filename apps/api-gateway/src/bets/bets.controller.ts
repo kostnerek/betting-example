@@ -1,10 +1,11 @@
-import { Body, Controller, Param, Post } from '@nestjs/common';
+import { Body, Controller, Param, Post, UseFilters } from '@nestjs/common';
 import { BetsService } from './bets.service';
-import { Bet } from '@app/common';
+import { Bet, GrpcExceptionFilter } from '@app/common';
 import { BetPlaceDto } from 'apps/api-gateway/src/bets/dto/bet-place.dto';
 import { firstValueFrom } from 'rxjs';
 
 @Controller('bet')
+@UseFilters(GrpcExceptionFilter)
 export class BetsController {
   constructor(private readonly betsService: BetsService) {}
 

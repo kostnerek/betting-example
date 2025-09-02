@@ -47,6 +47,13 @@ export class EnvironmentVariables {
   @IsInt()
   @Transform(({ value }) => +value)
   REDIS_DB = 0;
+
+  @IsString()
+  BETS_MS_HOST = 'localhost';
+
+  @IsInt()
+  @Transform(({ value }) => +value)
+  BETS_MS_PORT = 6001;
 }
 
 export function validate(config: Record<string, unknown>) {

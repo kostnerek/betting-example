@@ -1,4 +1,4 @@
-import { BetPlaceRequest, BetServiceClient, BetTeam } from '@app/common';
+import { BetPlaceRequest, BetServiceClient } from '@app/common';
 
 import { Metadata } from '@grpc/grpc-js';
 import { Inject, Injectable } from '@nestjs/common';
@@ -21,7 +21,6 @@ export class BetsService {
       gameId,
     };
     const metadata = new Metadata();
-    console.log('betPlace', grpcBody);
 
     return this.betGrpcService.betPlace(grpcBody, metadata);
   }

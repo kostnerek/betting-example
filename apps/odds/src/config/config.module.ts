@@ -5,6 +5,7 @@ import { validate } from './env.variables';
 import { ServerConfig } from './server.config';
 import { TheOddsApiConfig } from 'apps/odds/src/config/the-odds-api.config';
 import { RedisConfig } from 'apps/odds/src/config/redis.config';
+import { MicroserviceConfig } from 'apps/odds/src/config/microservice.config';
 
 @Global()
 @Module({
@@ -13,7 +14,7 @@ import { RedisConfig } from 'apps/odds/src/config/redis.config';
       validate,
     }),
   ],
-  providers: [ServerConfig, TheOddsApiConfig, RedisConfig],
-  exports: [ServerConfig, TheOddsApiConfig, RedisConfig],
+  providers: [ServerConfig, TheOddsApiConfig, RedisConfig, MicroserviceConfig],
+  exports: [ServerConfig, TheOddsApiConfig, RedisConfig, MicroserviceConfig],
 })
 export class AppConfigModule {}

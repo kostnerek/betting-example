@@ -1,5 +1,5 @@
 import { BetTeam } from '@app/common';
-import { IsEnum, Max, Min } from 'class-validator';
+import { IsEnum, IsString, Max, Min } from 'class-validator';
 
 export class BetPlaceDto {
   @IsEnum(BetTeam)
@@ -9,5 +9,6 @@ export class BetPlaceDto {
   @Max(100)
   amount: number;
 
+  @IsString()
   username: string;
 }

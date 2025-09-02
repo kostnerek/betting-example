@@ -35,13 +35,12 @@ export class GamesService {
     Logger.log(
       `Game ${id} results generated: ${winner}, score: ${homeTeamScore} - ${awayTeamScore}`,
     );
-    await this.gamesDao.updateGameResults(
+    return await this.gamesDao.updateGameResults(
       id,
       homeTeamScore,
       awayTeamScore,
       winner,
     );
-    return { message: 'Game results generated successfully' };
   }
 
   async getGameById(id: string): Promise<Game> {
