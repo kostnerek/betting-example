@@ -116,7 +116,7 @@ export class BetsService {
 
   private mapGrpcToEnum(team: any) {
     const teamCasted = team as number;
-    return teamCasted === 1 ? BetTeam.HOME : BetTeam.AWAY;
+    return teamCasted === 1 ? BetTeam.AWAY : BetTeam.HOME;
   }
 
   async betsProcessByGameId(
@@ -155,41 +155,49 @@ export class BetsService {
       `Processed ${wonBetsCount.count} won bets and ${lostBetsCount.count} lost bets for game ${game.id}`,
     );
     const wonBets = await this.dao.findBetsByGameIdAndWonStatus(game.id, true);
+    console.log(wonBets);
     await Promise.all(
       wonBets.map(async (bet: Bet) => {
-        const betAmount = Dinero({ amount: bet.amount });
-
-        const odds = game.odds.find((odd) => odd.team === bet.team);
-        if (!odds) {
-          throw GrpcErrors.internal('Odds not found');
-        }
-        const winnings = this.calculateWinnings(
-          odds.odds,
-          betAmount.getAmount(),
-        );
-        const user = await this.usersService.userById(bet.userId);
-        const newBalance = Dinero({ amount: user.balance }).add(
-          Dinero({ amount: winnings }),
-        );
-        return this.usersService.userSetBalance(
-          bet.userId,
-          newBalance.getAmount(),
-        );
+        return this.processWonBet(bet, game);
       }),
     );
     Logger.log(`Processed ${wonBets.length} won bets for game ${game.id}`);
     return { message: 'Bets processed successfully' };
   }
 
+  private async processWonBet(bet: Bet, game: Game) {
+    const betAmount = Dinero({ amount: bet.amount });
+
+    const odds = game.odds.find(
+      (odd) => this.mapGrpcToEnum(odd.team) === bet.team,
+    );
+    if (!odds) {
+      throw GrpcErrors.internal('Odds not found');
+    }
+
+    const winnings = this.calculateWinnings(odds.odds, betAmount.getAmount());
+
+    const user = await this.usersService.userById(bet.userId);
+    const newBalance = Dinero({ amount: user.balance }).add(
+      Dinero({ amount: winnings }),
+    );
+
+    return this.usersService.userSetBalance(bet.userId, newBalance.getAmount());
+  }
+
   private calculateWinnings(odds: number, betAmount: number) {
-    let profit = Dinero();
+    let profit: Dinero.Dinero;
 
     if (odds > 0) {
       // Positive odds (underdog)
-      profit = Dinero({ amount: odds / 100 }).multiply(betAmount);
+      profit = Dinero({ amount: Math.round((odds / 100) * 100) }).multiply(
+        betAmount,
+      );
     } else {
       // Negative odds (favorite)
-      profit = Dinero({ amount: 100 / Math.abs(odds) }).multiply(betAmount);
+      profit = Dinero({
+        amount: Math.round((100 / Math.abs(odds)) * 100),
+      }).multiply(betAmount);
     }
 
     return Dinero({ amount: betAmount }).add(profit).getAmount();

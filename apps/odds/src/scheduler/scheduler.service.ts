@@ -78,12 +78,7 @@ export class SchedulerService {
       return false;
     }
     Logger.log(`Found job ${jobId}, changing delay to none`);
-    await job.remove();
-    await this.processGamesQueue.add('scheduled-job', job.data, {
-      removeOnComplete: 10,
-      removeOnFail: 5,
-      jobId,
-    });
+    await job.changeDelay(0);
     return true;
   }
 

@@ -24,7 +24,7 @@ model Bet {
 
 model User {
   id     String   @id @default(uuid())
-  balance Float @default(100) // for testing purposes
+  balance Float @default(10000) // for testing purposes value is in cents
   bets Bet[]
   username String
 

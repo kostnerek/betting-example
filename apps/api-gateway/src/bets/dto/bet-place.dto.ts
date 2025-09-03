@@ -5,9 +5,9 @@ export class BetPlaceDto {
   @IsEnum(BetTeam)
   team: BetTeam;
 
-  @Min(1)
-  @Max(100)
-  amount: number;
+  @Min(100)
+  @Max(10000)
+  amount: number; //value in cents
 
   @IsString()
   username: string;

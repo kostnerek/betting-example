@@ -33,7 +33,10 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./apps/api-gateway/test/jest-e2e.json"
+    "test:e2e": "jest --config ./apps/api-gateway/test/jest-e2e.json",
+    "test:e2e:setup": "./scripts/setup-test-db.sh",
+    "test:e2e:teardown": "./scripts/teardown-test-db.sh",
+    "test:e2e:full": "npm run test:e2e:setup && npm run test:e2e && npm run test:e2e:teardown"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.13.4",
