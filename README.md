@@ -16,3 +16,14 @@ App is done in NestJS, using microservices architecture with gRPC as transport l
 Handling of processing games' result is done using scheduling tasks using BullMQ, when new games are pulled they are scheduled for processing at `commenceTime` of game. When time comes it generates random result, and processes all bets which users put inside this system.
 
 To speed this process up for testing there is endpoint /games/generate-results/:gameId which speeds processing of job tied to provided gameId
+
+If encountered any problems running app, run everything manually:
+`yarn`
+`yarn prisma:generate`
+`docker compose up -d`
+`npx prisma migrate dev --schema=./prisma/odds/schema.prisma`
+`npx prisma migrate dev --schema=./prisma/bets/schema.prisma`
+`yarn start:all`
+then you can use postman collection to run /game/refresh endpoint to pull fresh data from the-odds-api.com and run /user/register endpoint to create mock user with selected name.
+
+If issues persists, contact me directly
