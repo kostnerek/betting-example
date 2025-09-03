@@ -14,7 +14,7 @@ export class BetsService {
   }
   async betsProcessByGameId(gameId: string, winner: BetTeam) {
     Logger.log(`Processing game with ID: ${gameId}, winner: ${winner}`);
-    await firstValueFrom(
+    return await firstValueFrom(
       this.betService.betsProcessByGameId({ gameId, winner }, new Metadata()),
     );
   }

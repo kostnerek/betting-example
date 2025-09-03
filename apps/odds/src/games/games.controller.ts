@@ -10,7 +10,7 @@ import {
   GameServiceControllerMethods,
   SuccessResponse,
 } from '@app/common';
-import { Controller } from '@nestjs/common';
+import { Controller, Logger } from '@nestjs/common';
 import { GrpcMethod } from '@nestjs/microservices';
 import { GamesService } from 'apps/odds/src/games/games.service';
 import { SchedulerService } from 'apps/odds/src/scheduler/scheduler.service';
@@ -27,6 +27,7 @@ export class GamesController implements GameServiceController {
 
   @GrpcMethod()
   gameRunNow(request: GameRunNowRequest): Observable<SuccessResponse> {
+    Logger.log(`Speeding up game job execution for ${request.id} now`);
     return from(
       this.schedulerService.runJobNow(request.id).then(() => ({
         message: 'Game run now successfully',

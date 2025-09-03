@@ -5,7 +5,6 @@ import { status } from '@grpc/grpc-js';
  * Creates a standardized gRPC exception
  */
 export function createGrpcError(code: status, message: string): RpcException {
-  console.log('Throwing RPC error');
   return new RpcException({
     code,
     message,

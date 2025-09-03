@@ -16,6 +16,10 @@ import { LoggerModule } from '@app/common';
       inject: [RedisConfig],
       useFactory: (config: RedisConfig) => {
         return {
+          defaultJobOptions: {
+            removeOnComplete: true,
+            removeOnFail: true,
+          },
           connection: config.getConnectionOptions(),
         };
       },

@@ -11,7 +11,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { BetsDao } from 'apps/bets/src/bets/bets.dao';
 import { GamesService } from 'apps/bets/src/games/games.service';
 import { UsersService } from 'apps/bets/src/users/users.service';
-import Dinero from 'dinero.js';
+import * as Dinero from 'dinero.js';
 import { Bet, Prisma, User } from 'generated/prisma/bets';
 
 @Injectable()
@@ -29,9 +29,9 @@ export class BetsService {
     return true;
   }
 
-  private validateUserBalance(userBalance: number, amount: number): boolean {
+  private validateUserBalance(userBalance: number, betAmount: number): boolean {
     const dineroUserBalance = Dinero({ amount: userBalance });
-    const dineroAmount = Dinero({ amount });
+    const dineroAmount = Dinero({ amount: betAmount });
     if (dineroUserBalance.lessThan(dineroAmount)) {
       return false;
     }
@@ -90,21 +90,17 @@ export class BetsService {
 
       I didn't find flag in ts_proto to disable this behavior
     */
-    const mapGrpcToEnum = (team: any) => {
-      const teamCasted = team as number;
-      return teamCasted === 1 ? BetTeam.HOME : BetTeam.AWAY;
-    };
 
     const bet = await this.dao.createBet(
       {
         gameId: request.gameId,
         amount: request.amount,
-        team: mapGrpcToEnum(request.team),
+        team: this.mapGrpcToEnum(request.team),
       },
       user.id,
     );
     Logger.log(
-      `User ${user.id} placed bet on game ${game.id} for ${request.amount}, ${request.team}`,
+      `User ${user.id} placed bet on game ${game.id} for ${request.amount}, ${this.mapGrpcToEnum(request.team)}`,
     );
     const newBalance = Dinero({ amount: user.balance }).subtract(
       Dinero({ amount: request.amount }),
@@ -118,6 +114,11 @@ export class BetsService {
     };
   }
 
+  private mapGrpcToEnum(team: any) {
+    const teamCasted = team as number;
+    return teamCasted === 1 ? BetTeam.HOME : BetTeam.AWAY;
+  }
+
   async betsProcessByGameId(
     request: BetsProcessByGameIdRequest,
   ): Promise<SuccessResponse> {
@@ -125,14 +126,13 @@ export class BetsService {
     if (!game) {
       throw GrpcErrors.notFound('Game');
     }
-    Logger.log(
-      `Processing bets for game ${game.id}, winner: ${request.winner}`,
-    );
+    const winner = this.mapGrpcToEnum(request.winner);
+    Logger.log(`Processing bets for game ${game.id}, winner: ${winner}`);
 
     const updateWonBets: Prisma.BetUpdateManyArgs = {
       where: {
         gameId: game.id,
-        team: request.winner,
+        team: winner,
       },
       data: {
         won: true,
@@ -142,7 +142,7 @@ export class BetsService {
       where: {
         gameId: game.id,
         team: {
-          not: request.winner,
+          not: winner,
         },
       },
       data: {

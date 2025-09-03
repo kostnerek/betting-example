@@ -100,6 +100,10 @@ export class GamesService {
           Logger.log(
             `Updating job for game ${game.id}, commence time: ${game.commenceTime.toISOString()}`,
           );
+          if (game.homeTeamScore) {
+            Logger.warn(`Game ${game.id} already has score`);
+            return;
+          }
           return this.schedulerService.updateJobDate(
             game.id,
             new Date(game.commenceTime),
@@ -130,3 +134,11 @@ export class GamesService {
     return response;
   }
 }
+
+/*
+0042b0009547d8a7c9827977546613de
+00eb7e982d3c341cdc68795c73d901e1
+072f959e31211e7c805451ce92a5f4e5
+1269706534827fc185ca0d61405ecd99
+13917a414157bda81dd6b417d440e1a6
+*/

@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import { JobData } from 'apps/odds/src/scheduler/interfaces/job-data.interface';
+import { BULL_MQ_QUEUE_NAME } from '@app/common';
 
 interface ScheduledJobResult {
   jobId: string | undefined;
@@ -13,7 +14,7 @@ interface ScheduledJobResult {
 @Injectable()
 export class SchedulerService {
   constructor(
-    @InjectQueue('process-games')
+    @InjectQueue(BULL_MQ_QUEUE_NAME)
     private readonly processGamesQueue: Queue<JobData>,
   ) {}
 
@@ -76,7 +77,13 @@ export class SchedulerService {
     if (!job) {
       return false;
     }
-    await job.changeDelay(0);
+    Logger.log(`Found job ${jobId}, changing delay to none`);
+    await job.remove();
+    await this.processGamesQueue.add('scheduled-job', job.data, {
+      removeOnComplete: 10,
+      removeOnFail: 5,
+      jobId,
+    });
     return true;
   }
 
