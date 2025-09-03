@@ -1,0 +1,217 @@
+{
+	"info": {
+		"_postman_id": "bde389ae-7b85-43fd-a661-70e8513b5141",
+		"name": "betting-example",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18340991"
+	},
+	"item": [
+		{
+			"name": "/games",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/games?page=1&pageSize=10",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"games"
+					],
+					"query": [
+						{
+							"key": "team",
+							"value": "la",
+							"disabled": true
+						},
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "pageSize",
+							"value": "10"
+						},
+						{
+							"key": "time",
+							"value": "2025-10-30T23:40:00.000Z",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/games/generate-results/:gameId",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/games/generate-results/:gameId",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"games",
+						"generate-results",
+						":gameId"
+					],
+					"query": [
+						{
+							"key": "team",
+							"value": "la",
+							"disabled": true
+						},
+						{
+							"key": "time",
+							"value": "2025-10-30T23:40:00.000Z",
+							"disabled": true
+						}
+					],
+					"variable": [
+						{
+							"key": "gameId",
+							"value": "63016986bd7402f9433def9ec4be4fe1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/games/refresh",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{url}}/games/refresh",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"games",
+						"refresh"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/user",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"test\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/user",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/user/register",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"test1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/user/register",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"user",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/bet/place/:gameId",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"team\": \"HOME\",\n    \"username\": \"test\",\n    \"amount\": 10\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/bet/place/:gameId",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"bet",
+						"place",
+						":gameId"
+					],
+					"variable": [
+						{
+							"key": "gameId",
+							"value": "63016986bd7402f9433def9ec4be4fe1"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
