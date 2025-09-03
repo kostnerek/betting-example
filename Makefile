@@ -10,11 +10,11 @@ migrate: migrate-odds migrate-bets
 
 migrate-odds:
 	@echo "Migrating odds database..."
-	@npx prisma migrate dev --schema=./prisma/odds/schema.prisma > /dev/null 2>&1
+	@npx prisma migrate dev --schema=./prisma/odds/schema.prisma
 	
 migrate-bets:
 	@echo "Migrating bets database..."
-	@npx prisma migrate dev --schema=./prisma/bets/schema.prisma > /dev/null 2>&1
+	@npx prisma migrate dev --schema=./prisma/bets/schema.prisma
 	
 
 reset-migrations: reset-migrations-odds reset-migrations-bets
@@ -29,20 +29,20 @@ reset-migrations-bets:
 
 refresh-games:
 	@echo "Refreshing games..."
-	@curl --silent --output /dev/null \
+	@curl --silent \
 	  --location 'http://$(or $(HOST),localhost):$(or $(PORT),3000)/api/games/refresh' \
 	  --header 'Content-Type: application/json'
 
 create-user:
 	@echo "Creating user..."
-	@curl --silent --output /dev/null \
+	@curl --silent \
 	  --location 'http://$(or $(HOST),localhost):$(or $(PORT),3000)/api/user/register' \
 	  --header 'Content-Type: application/json' \
 	  --data '{"username": "test"}'
 
 prisma-generate: 
 	@echo "Generating prisma..."
-	@yarn prisma:generate > /dev/null 2>&1
+	@yarn prisma:generate
 
 env:
 	@echo "Preparing environment..."
@@ -91,7 +91,7 @@ stop-services:
 
 install:
 	@echo "Installing dependencies..."
-	@yarn install > /dev/null 2>&1
+	@yarn install
 
 prepare: install prisma-generate env docker-up wait-for-database migrate start-and-setup stop-services
 
